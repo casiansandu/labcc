@@ -29,6 +29,7 @@ export async function getUserProfilePictureService(userId: number): Promise<Prof
   }
 
   const row = result.rows[0];
+
   return {
     id: row.id,
     imageUrl: row.image_url,

@@ -1,6 +1,7 @@
 import { db } from '../db/db';
 import { hashPassword } from '../utils/hashPassword';
 import { CreateUserInput, CreateUserResult } from '../types';
+import { logUserAction } from '../utils/logger';
 
 export async function createUserService(input: CreateUserInput): Promise<CreateUserResult> {
   const username = input.username.trim();
@@ -23,6 +24,5 @@ export async function createUserService(input: CreateUserInput): Promise<CreateU
       input.phoneNumber ?? null,
     ],
   );
-
   return result.rows[0];
 }

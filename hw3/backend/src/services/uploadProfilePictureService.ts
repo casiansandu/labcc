@@ -1,5 +1,6 @@
 import { db } from '../db/db';
 import { uploadFileToGCS } from '../utils/gcsUpload';
+import { logUserAction } from '../utils/logger';
 
 export async function uploadProfilePictureService(
   userId: number,
@@ -31,6 +32,5 @@ export async function uploadProfilePictureService(
     [imageUrl, userId]
   );
 
-  console.log(`User ${userId} uploaded new profile picture: ${imageUrl}`);
   return imageUrl;
 }
