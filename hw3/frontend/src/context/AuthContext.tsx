@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { mockAuthMeEndpoint, mockUsersMeEndpoint } from '../mocks/mockApi';
+import { API_BASE_URL } from '../config/api';
 
 type AuthUser = {
   userId: number;
@@ -23,13 +23,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
 
     try {
-      const authData = await mockAuthMeEndpoint();
-      const profile = await mockUsersMeEndpoint();
+      const authResponse = await fetch(`${API_BASE_URL}/auth/me`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      
+      if (!authResponse.ok) {
+        setUser(null);
+        return;
+      }
+
+      const authData = await authResponse.json() as { userId: number; username: string };
+
+      const profileResponse = await fetch(`${API_BASE_URL}/users/me`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!profileResponse.ok) {
+        setUser(null);
+        return;
+      }
+
+      const profile = await profileResponse.json() as { profile_picture_url: string | null };
+
+      // Fetch the profile picture from dedicated endpoint for fresh display
+      let pictureUrl = profile.profile_picture_url;
+      try {
+        const picResponse = await fetch(`${API_BASE_URL}/users/profile-picture`, {
+          credentials: 'include',
+        });
+
+        if (picResponse.ok) {
+          const contentType = picResponse.headers.get('content-type');
+          if (contentType?.includes('application/json')) {
+            const picData = await picResponse.json() as { profilePictureUrl: string | null };
+            pictureUrl = picData.profilePictureUrl;
+          } else if (contentType?.includes('image')) {
+            // If it's an image blob, create object URL
+            const picBlob = await picResponse.blob();
+            pictureUrl = URL.createObjectURL(picBlob);
+          }
+        }
+      } catch {
+        // Fall back to profile_picture_url if dedicated endpoint fails
+      }
 
       setUser({
         userId: authData.userId,
         username: authData.username,
-        profilePictureUrl: profile.profile_picture_url,
+        profilePictureUrl: pictureUrl,
       });
     } catch {
       setUser(null);

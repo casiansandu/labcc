@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
 import '../styles/Register.css';
-import { isMockApiError, mockRegisterEndpoint } from '../mocks/mockApi';
 
 interface RegisterForm {
   username: string;
@@ -33,24 +33,30 @@ const Register = () => {
     setError('');
 
     try {
-      await mockRegisterEndpoint({
-        username: form.username,
-        email: form.email,
-        full_name: form.fullName,
-        password: form.password,
-        birth_date: form.birthDate || null,
-        phone_number: form.phoneNumber || null,
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: form.username,
+          email: form.email,
+          full_name: form.fullName,
+          password: form.password,
+          birth_date: form.birthDate || null,
+          phone_number: form.phoneNumber || null,
+        }),
       });
 
-      alert('User registered successfully! You can now log in.');
-      navigate('/login');
-    } catch (error) {
-      if (isMockApiError(error)) {
-        setError(error.message);
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || errorData.error || 'Registration failed');
         return;
       }
 
-      setError('Mock endpoint error');
+      alert('User registered successfully! You can now log in.');
+      navigate('/login');
+    } catch {
+      setError('Network error');
     }
   };
 

@@ -13,6 +13,8 @@ dist/
 build/
 .cache/
 
+./hw3/backend/cloudrc-492117-7ee56ea342a7.json
+
 # --- OS/IDE Files ---
 .DS_Store
 .vscode/

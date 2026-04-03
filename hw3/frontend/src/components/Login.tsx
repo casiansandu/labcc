@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config/api';
 import '../styles/Login.css';
 import { useAuth } from '../context/AuthContext';
-import { isMockApiError, mockLoginEndpoint } from '../mocks/mockApi';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,16 +16,24 @@ const Login = () => {
     setError('');
 
     try {
-      await mockLoginEndpoint({ email, password });
-      await refreshAuth();
-      navigate('/home');
-    } catch (error) {
-      if (isMockApiError(error)) {
-        setError(error.message);
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      console.log('Login response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || 'Login failed');
         return;
       }
 
-      setError('Mock endpoint error');
+      await refreshAuth();
+      navigate('/home');
+    } catch {
+      setError('Network error');
     }
   };
 

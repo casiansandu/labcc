@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import {
-  isMockApiError,
-  mockUploadProfilePictureEndpoint,
-  mockUsersMeEndpoint,
-  type UserProfile,
-} from '../mocks/mockApi';
+import { API_BASE_URL } from '../config/api';
+import type { UserProfile } from '../mocks/mockApi';
 import '../styles/Profile.css';
 
 const Profile = () => {
@@ -22,13 +18,24 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      const data = await mockUsersMeEndpoint();
+      const response = await fetch(`${API_BASE_URL}/users/me`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to load profile');
+        return;
+      }
+
+      const data = (await response.json()) as UserProfile;
       setProfile(data);
     } catch (loadError) {
-      if (isMockApiError(loadError)) {
+      if (loadError instanceof Error) {
         setError(loadError.message);
       } else {
-        setError('Mock endpoint error');
+        setError('Failed to load profile');
       }
     } finally {
       setLoading(false);
@@ -55,17 +62,48 @@ const Profile = () => {
 
     try {
       setUploading(true);
-      const updatedProfile = await mockUploadProfilePictureEndpoint(selectedFile);
-      setProfile(updatedProfile);
+      const formData = new FormData();
+      formData.append('profilePicture', selectedFile);
+
+      const response = await fetch(`${API_BASE_URL}/users/upload-profile-picture`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setUploadMessage(errorData.error || 'Upload failed');
+        return;
+      }
+
+      const data = (await response.json()) as { imageUrl: string };
+      
+      // Fetch the updated profile picture from dedicated endpoint
+      const picResponse = await fetch(`${API_BASE_URL}/users/profile-picture`, {
+        credentials: 'include',
+      });
+
+      let pictureUrl = data.imageUrl;
+      if (picResponse.ok) {
+        const picData = await picResponse.blob();
+        pictureUrl = URL.createObjectURL(picData);
+      }
+
+      setProfile((prev) =>
+        prev
+          ? {
+              ...prev,
+              profile_picture_url: pictureUrl,
+              updated_at: new Date().toISOString(),
+            }
+          : null
+      );
       await refreshAuth();
       setSelectedFile(null);
       setUploadMessage('Profile picture updated successfully.');
-    } catch (uploadError) {
-      if (isMockApiError(uploadError)) {
-        setUploadMessage(uploadError.message);
-      } else {
-        setUploadMessage('Upload failed on mock endpoint.');
-      }
+    } catch {
+      setUploadMessage('Network error during upload');
     } finally {
       setUploading(false);
     }
