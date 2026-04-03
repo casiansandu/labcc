@@ -31,5 +31,6 @@ export async function uploadProfilePictureService(
     [imageUrl, userId]
   );
 
+  console.log(`User ${userId} uploaded new profile picture: ${imageUrl}`);
   return imageUrl;
 }

@@ -8,5 +8,6 @@ const authMiddleware_1 = require("../middlewares/authMiddleware");
 const authRoutes = (0, express_1.Router)();
 authRoutes.post('/register', createUserController_1.createUserController);
 authRoutes.post('/login', loginController_1.loginController);
+authRoutes.post('/logout', loginController_1.logoutController);
 authRoutes.get('/me', authMiddleware_1.authMiddleware, meController_1.meController);
 exports.default = authRoutes;

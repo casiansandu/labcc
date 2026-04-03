@@ -5,7 +5,7 @@ export async function meController(req: Request, res: Response): Promise<void> {
   const authUser = (req as RequestWithAuth).authUser;
 
   if (!authUser) {
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized3' });
     return;
   }
 

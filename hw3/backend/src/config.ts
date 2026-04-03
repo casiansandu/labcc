@@ -16,6 +16,7 @@ export const config = {
         jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
         cookieName: process.env.AUTH_COOKIE_NAME || 'auth_token',
         cookieMaxAgeMs: Number.parseInt(process.env.AUTH_COOKIE_MAX_AGE_MS || '86400000'),
+        cookieSameSite: (process.env.AUTH_COOKIE_SAME_SITE || 'lax') as 'lax' | 'none' | 'strict',
     },
     cors: {
         allowedOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:5173')

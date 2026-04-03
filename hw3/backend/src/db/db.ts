@@ -1,7 +1,7 @@
 import { Pool, QueryResult, QueryResultRow } from 'pg';
 import { config } from '../config';
 
-const connectionString = //process.env.DATABASE_URL || 
+const connectionString = process.env.DATABASE_URL || 
 process.env.DATABASE_URL_LOCAL;
 
 const pool = connectionString

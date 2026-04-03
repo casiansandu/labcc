@@ -15,7 +15,7 @@ export async function loginController(req: Request, res: Response): Promise<void
     res.cookie(config.auth.cookieName, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: config.auth.cookieSameSite,
       maxAge: config.auth.cookieMaxAgeMs,
       path: '/',
     });
@@ -25,4 +25,15 @@ export async function loginController(req: Request, res: Response): Promise<void
     console.log('Login failed:', error);
     res.status(401).json({ error: 'Invalid credentials' });
   }
+}
+
+export function logoutController(req: Request, res: Response): void {
+  res.clearCookie(config.auth.cookieName, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: config.auth.cookieSameSite,
+    path: '/',
+  });
+
+  res.status(200).json({ message: 'Logout successful' });
 }

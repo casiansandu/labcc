@@ -10,9 +10,9 @@ export async function createUserService(input: CreateUserInput): Promise<CreateU
 
   const result = await db.query<CreateUserResult>(
     `
-      INSERT INTO users (username, email, full_name, password, birth_date, phone_number, profile_picture_url)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id, username, email, full_name, birth_date, phone_number, profile_picture_url, created_at, updated_at
+      INSERT INTO users (username, email, full_name, password, birth_date, phone_number)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id, username, email, full_name, birth_date, phone_number, created_at, updated_at
     `,
     [
       username,
@@ -21,7 +21,6 @@ export async function createUserService(input: CreateUserInput): Promise<CreateU
       passwordHash,
       input.birthDate ?? null,
       input.phoneNumber ?? null,
-      input.profilePictureUrl ?? null,
     ],
   );
 

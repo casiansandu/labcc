@@ -17,7 +17,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
     const token = req.cookies?.[config.auth.cookieName] as string | undefined;
 
     if (!token) {
-      res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized1' });
       return;
     }
 
@@ -45,6 +45,6 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
     (req as RequestWithAuth).authUser = { userId, username };
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized2' });
   }
 }
