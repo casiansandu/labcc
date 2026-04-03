@@ -41,6 +41,9 @@
 }
 
 .navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   font-size: 0.9rem;
   color: #555;
 }
@@ -51,4 +54,20 @@
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   font-weight: 500;
+}
+
+.navbar-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #d9e5ff;
+}
+
+.navbar-avatar-placeholder {
+  display: grid;
+  place-items: center;
+  background: #1f7cff;
+  color: #fff;
+  font-weight: 700;
 }

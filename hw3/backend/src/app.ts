@@ -1,15 +1,37 @@
 import 'dotenv/config';
 import { config } from './config';
 import express, { Application } from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { db } from './db/db';
 import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
 
 const PORT = config.server.port;
 
 const app: Application = express();
 
+app.set('trust proxy', 1);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    if (config.cors.allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
 
 app.get('/', (req: express.Request, res: express.Response) => {
   res.send('Hello from App Engine!');

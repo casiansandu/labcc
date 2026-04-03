@@ -1,1 +1,19 @@
-.env
+# --- Secrets & Keys (CRITICAL) ---
+**/.env
+**/app.yaml
+*.json
+
+# --- Dependencies ---
+**/node_modules/
+**/__pycache__/
+.venv/
+
+# --- Build Artifacts ---
+dist/
+build/
+.cache/
+
+# --- OS/IDE Files ---
+.DS_Store
+.vscode/
+.idea/

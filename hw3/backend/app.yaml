@@ -7,3 +7,4 @@ env_variables:
   DB_NAME: "cloudrc"
   INSTANCE_CONNECTION_NAME: "cloudrc-492117:europe-central2:cloudrc"
   DATABASE_URL: "postgresql://postgres:`~RJj@:B73x>2$Qj@/cloudrc?host=/cloudsql/cloudrc-492117:europe-central2:cloudrc"
+  CORS_ORIGINS: "http://localhost:5173,http://localhost:3000"

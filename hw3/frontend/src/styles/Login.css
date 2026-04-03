@@ -72,6 +72,23 @@
   margin-top: 1rem;
 }
 
+.login-alt-link {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #667085;
+}
+
+.login-alt-link a {
+  color: #1f6feb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-alt-link a:hover {
+  text-decoration: underline;
+}
+
 .login-button:hover {
   background: #2980b9;
 }

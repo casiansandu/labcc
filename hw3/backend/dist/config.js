@@ -12,5 +12,17 @@ exports.config = {
     },
     server: {
         port: Number.parseInt(process.env.PORT || '3010'),
-    }
+    },
+    auth: {
+        jwtSecret: process.env.JWT_SECRET || 'dev_change_this_secret',
+        jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
+        cookieName: process.env.AUTH_COOKIE_NAME || 'auth_token',
+        cookieMaxAgeMs: Number.parseInt(process.env.AUTH_COOKIE_MAX_AGE_MS || '86400000'),
+    },
+    cors: {
+        allowedOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:5173')
+            .split(',')
+            .map((origin) => origin.trim())
+            .filter(Boolean),
+    },
 };
