@@ -22,6 +22,8 @@ export async function loginService(email: string, password: string): Promise<str
 
   const expiresIn = config.auth.jwtExpiresIn as SignOptions['expiresIn'];
 
+  
+
   return jwt.sign(
     {
       sub: user.id,
